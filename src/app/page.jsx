@@ -17,7 +17,7 @@ export default function Home() {
       {/* Navbar */}
       <div className="flex justify-between items-center mb-6">
         <div className="text-xl font-bold flex items-center gap-2">
-          <span>Vita Booth</span>
+          <span>Photobooth by Laildev</span>
         </div>
 
         <div className="flex gap-4 items-center">
