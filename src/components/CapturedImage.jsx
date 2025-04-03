@@ -5,7 +5,7 @@ export default function CapturedImage({ capturedImage, mirror, downloadPhoto }) 
           src={capturedImage}
           alt="Captured"
           className={`border rounded-lg ${mirror ? 'mirror' : ''}`}
-          style={{ objectFit: 'cover' }}
+          style={{ height: 'full', objectFit: 'cover' }}
         />
         <button
           onClick={downloadPhoto}
