@@ -21,7 +21,7 @@ export default function Photobooth() {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
