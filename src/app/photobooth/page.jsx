@@ -38,11 +38,8 @@ export default function Photobooth() {
         const context = canvas.getContext('2d');
         const photoCount = layout === 'triple' ? 3 : layout === 'double' ? 2 : 1;
 
-        const screenshotWidth = 640;
-        const screenshotHeight = 480;
-
-        canvas.width = screenshotWidth;
-        canvas.height = screenshotHeight * photoCount;
+        let imageWidth = 640;
+        let imageHeight = 480;
 
         const frames = [];
 
@@ -63,18 +60,25 @@ export default function Photobooth() {
                         imgElement.src = image;
 
                         imgElement.onload = () => {
+                            if (index === 0) {
+                                imageWidth = imgElement.width;
+                                imageHeight = imgElement.height;
+                                canvas.width = imageWidth;
+                                canvas.height = imageHeight * photoCount;
+                            }
+
                             context.save();
                             if (mirror) {
-                                context.translate(screenshotWidth, 0);
+                                context.translate(imageWidth, 0);
                                 context.scale(-1, 1);
                             }
                             context.filter = filter;
                             context.drawImage(
                                 imgElement,
                                 0,
-                                index * screenshotHeight,
-                                screenshotWidth,
-                                screenshotHeight
+                                index * imageHeight,
+                                imageWidth,
+                                imageHeight
                             );
                             context.restore();
                             resolve();
@@ -90,8 +94,8 @@ export default function Photobooth() {
 
         const border = 40;
         const labelHeight = 80;
-        const finalWidth = screenshotWidth + border * 2;
-        const finalHeight = screenshotHeight * photoCount + border * 2 + labelHeight;
+        const finalWidth = imageWidth + border * 2;
+        const finalHeight = imageHeight * photoCount + border * 2 + labelHeight;
 
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = finalWidth;
@@ -103,6 +107,8 @@ export default function Photobooth() {
         finalCtx.drawImage(canvas, border, border);
         finalCtx.fillStyle = '#000';
         finalCtx.font = 'bold 16px sans-serif';
+        finalCtx.textAlign = 'center';
+        finalCtx.fillText('photobooth', finalWidth / 2, finalHeight - 12);
 
         setCapturedImage(finalCanvas.toDataURL('image/png'));
     };
