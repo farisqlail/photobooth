@@ -1,11 +1,11 @@
 export default function CapturedImage({ capturedImage, mirror, downloadPhoto }) {
     return (
-      <div className="mt-4 flex flex-col items-center">
+      <div className="mt-4 flex flex-col items-center w-full px-4">
         <img
           src={capturedImage}
           alt="Captured"
-          className={`border rounded-lg ${mirror ? 'mirror' : ''}`}
-          style={{ height: 'full', objectFit: 'cover' }}
+          className={`border rounded-lg max-w-full h-auto ${mirror ? 'mirror' : ''}`}
+          style={{ maxHeight: '480px', objectFit: 'cover' }}
         />
         <button
           onClick={downloadPhoto}
@@ -16,4 +16,3 @@ export default function CapturedImage({ capturedImage, mirror, downloadPhoto }) 
       </div>
     );
   }
-  

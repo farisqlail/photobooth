@@ -34,75 +34,78 @@ export default function Photobooth() {
         setCapturedImage(null);
         const canvas = canvasRef.current;
         if (!canvas || !videoRef.current) return;
-    
+
         const context = canvas.getContext('2d');
         const photoCount = layout === 'triple' ? 3 : layout === 'double' ? 2 : 1;
-    
+
         const screenshotWidth = 640;
         const screenshotHeight = 480;
-    
+
         canvas.width = screenshotWidth;
         canvas.height = screenshotHeight * photoCount;
-    
+
         const frames = [];
-    
+
         const countdownAndCapture = (index) => {
-          return new Promise((resolve) => {
-            let counter = 3;
-            setCountdown(counter);
-    
-            const countdownInterval = setInterval(() => {
-              counter--;
-              setCountdown(counter);
-              if (counter === 0) {
-                clearInterval(countdownInterval);
-                setCountdown(null);
-    
-                const image = videoRef.current.getScreenshot();
-                const imgElement = new Image();
-                imgElement.src = image;
-    
-                imgElement.onload = () => {
-                  if (mirror) {
-                    context.save();
-                    context.translate(screenshotWidth, 0);
-                    context.scale(-1, 1);
-                    context.drawImage(imgElement, 0, index * screenshotHeight, screenshotWidth, screenshotHeight);
-                    context.restore();
-                  } else {
-                    context.drawImage(imgElement, 0, index * screenshotHeight, screenshotWidth, screenshotHeight);
-                  }
-                  resolve();
-                };
-              }
-            }, 1000);
-          });
+            return new Promise((resolve) => {
+                let counter = 3;
+                setCountdown(counter);
+
+                const countdownInterval = setInterval(() => {
+                    counter--;
+                    setCountdown(counter);
+                    if (counter === 0) {
+                        clearInterval(countdownInterval);
+                        setCountdown(null);
+
+                        const image = videoRef.current.getScreenshot();
+                        const imgElement = new Image();
+                        imgElement.src = image;
+
+                        imgElement.onload = () => {
+                            context.save();
+                            if (mirror) {
+                                context.translate(screenshotWidth, 0);
+                                context.scale(-1, 1);
+                            }
+                            context.filter = filter;
+                            context.drawImage(
+                                imgElement,
+                                0,
+                                index * screenshotHeight,
+                                screenshotWidth,
+                                screenshotHeight
+                            );
+                            context.restore();
+                            resolve();
+                        };
+                    }
+                }, 1000);
+            });
         };
-    
+
         for (let i = 0; i < photoCount; i++) {
-          await countdownAndCapture(i);
+            await countdownAndCapture(i);
         }
-    
-        // Tambahkan frame di luar
+
         const border = 40;
         const labelHeight = 80;
         const finalWidth = screenshotWidth + border * 2;
         const finalHeight = screenshotHeight * photoCount + border * 2 + labelHeight;
-    
+
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = finalWidth;
         finalCanvas.height = finalHeight;
         const finalCtx = finalCanvas.getContext('2d');
-    
+
         finalCtx.fillStyle = frameColor;
         finalCtx.fillRect(0, 0, finalWidth, finalHeight);
         finalCtx.drawImage(canvas, border, border);
         finalCtx.fillStyle = '#000';
         finalCtx.font = 'bold 16px sans-serif';
-        finalCtx.textAlign = 'center';
-    
+
         setCapturedImage(finalCanvas.toDataURL('image/png'));
-      };
+    };
 
     const downloadPhoto = () => {
         if (capturedImage) {
