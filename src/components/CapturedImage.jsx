@@ -4,7 +4,7 @@ export default function CapturedImage({ capturedImage, mirror, downloadPhoto }) 
             <img
                 src={capturedImage}
                 alt="Captured"
-                className={`border rounded-lg ${mirror ? 'mirror' : ''}`}
+                className={`rounded-lg ${mirror ? 'mirror' : ''}`}
                 style={{
                     maxWidth: '100%',
                     height: 'auto',

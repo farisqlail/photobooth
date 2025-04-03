@@ -107,8 +107,6 @@ export default function Photobooth() {
         finalCtx.drawImage(canvas, border, border);
         finalCtx.fillStyle = '#000';
         finalCtx.font = 'bold 16px sans-serif';
-        finalCtx.textAlign = 'center';
-        finalCtx.fillText('photobooth', finalWidth / 2, finalHeight - 12);
 
         setCapturedImage(finalCanvas.toDataURL('image/png'));
     };
